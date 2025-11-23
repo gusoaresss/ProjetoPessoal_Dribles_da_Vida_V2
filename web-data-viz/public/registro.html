@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/registro.css">
+    <title>Gestão de Time de Basquete</title>
+
+</head>
+<body >
+      <head>
+        <div class="header">
+            <div class="container">
+            <div class="navbar">
+                <nav class="nav_header">
+                <a class="nav_a" href="index.html">Inicio</a>
+                <a class= "nav_a" href="#">Registre seu time</a>
+                <a class= "nav_a" href="login.html">Login</a>
+                <a class= "nav_a" href="cadastro.html">Cadastro</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+</div>
+    </head>
+
+<h1>Gestão de Time de Basquete</h1>
+
+
+<div class="container">
+    <h2>Adicionar Jogador</h2>
+    <input type="text" id="nomeJogador" placeholder="Nome do jogador">
+    <input type="text" id="posicaoJogador" placeholder="Posição">
+    <input type="number" id="idadeJogador" placeholder="Idade">
+    <input type="number" id="numeroJogador" placeholder="Número da camisa">
+    <button onclick="adicionarJogador()">Adicionar Jogador</button>
+</div>
+
+<div class="container">
+    <h2>Registrar Treino</h2>
+    <input type="date" id="dataTreino">
+    <input type="text" id="descricaoTreino" placeholder="Descrição do treino">
+    <button onclick="adicionarTreino()">Registrar Treino</button>
+</div>
+
+
+<div class="container">
+    <h2>Registrar Jogo</h2>
+    <input type="text" id="adversarioJogo" placeholder="Adversário">
+    <input type="number" id="pontosNossoTime" placeholder="Pontos do nosso time">
+    <input type="number" id="pontosAdversario" placeholder="Pontos do adversário">
+    <button onclick="adicionarJogo()">Registrar Jogo</button>
+</div>
+   
+ <div class="sorteio">
+
+
+ <h2>Escreva o nome de quem treinou menos:</h2>
+
+    <input type="text" id="nome_1" placeholder="Jogador 1"><br><br>
+    <input type="text" id="nome_2" placeholder="Jogador 2"><br><br>
+    <input type="text" id="nome_3" placeholder="Jogador 3"><br><br>
+
+    <button onclick="sortear()">Sortear</button>
+
+    <div id="resultado"></div>
+ </div>
+
+<button><a href="dashboardGustavoTeste.html">Ver dashboard</a></button>
+
+<script>
+    
+
+   function adicionarJogador() {
+    var nomeVar = nomeJogador.value;
+    var posicaoVar = posicaoJogador.value;
+    var idadeVar  = idadeJogador.value;
+    var numeroVar  = numeroJogador.value;
+    if(nomeVar == "" || posicaoVar == "" || idadeVar == "" || numeroVar == ""){
+         mensagem_erro.innerHTML =
+        "(Mensagem de erro para todos os campos em branco)";
+    }
+
+    fetch("/jogador/cadastrar",{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            nomeServer: nomeVar,
+            posicaoServer: posicaoVar,
+            idadeServer: idadeVar,
+            numeroServer: numeroVar
+        }),
+    })
+    .then(function (resposta){
+        console.log("resposta",resposta);
+    })
+    .catch(function(resposta){
+        console.log(`#erro: ${resposta}`);
+    });
+}
+
+    function adicionarTreino() {
+    var data = dataTreino.value;
+    var descricao = descricaoTreino.value;
+
+        fetch("/treino/cadastrar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                data: data,
+                descricao: descricao
+            }),
+        }).then(function (resposta){
+            console.log("DEU CERTO!");
+        })
+}
+
+    
+    function adicionarJogo() {
+    var adversarioVar = adversarioJogo.value;
+    var pontosNossoVar = pontosNossoTime.value;
+    var pontosAdversarioVar = pontosAdversario.value;
+
+    if(adversarioVar && pontosNossoVar !== '' && pontosAdversarioVar !== '') {
+
+        fetch("/jogo/cadastrar", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json" },
+            body: JSON.stringify({
+
+                adversario: adversarioVar,
+                pontos_nosso: pontosNossoVar,
+                pontos_adversario: pontosAdversarioVar
+            }),
+        })
+        .then(function(resposta){
+            console.log("resposta:", resposta);
+        })
+        .catch(function(resposta){
+            console.log(`#ERRO: ${resposta}`);
+        });
+    } else {
+        alert("Preencha todos os campos!");
+    }
+}
+
+ function sortear() {
+    jogadorUm = nome_1.value;
+    jogadorDois =  nome_2.value;
+    jogadorTres =  nome_3.value;
+
+     var  jogadores = [];
+
+            jogadores.push(jogadorUm);
+            jogadores.push(jogadorDois);
+            jogadores.push(jogadorTres);
+
+            var numeroJogadores = jogadores.length;
+            var  sorteado = Math.floor(((Math.random() * 7) + 13) % numeroJogadores);
+
+            resultado.innerHTML =  `Quem vai pagar a Coca: ${jogadores[sorteado]}`;
+        }
+   
+</script>
+
+</body>
+</html>

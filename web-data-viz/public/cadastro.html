@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Dribles da Vida | Cadastro</title>
+
+  <script src="./js/sessao.js"></script>
+
+  <link rel="stylesheet" href="css/cadastro.css" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+</head>
+
+<body onload="listar()">
+  <!--header inicio-->
+ <header>
+         <div class="header">
+            <div class="container">
+          <img src="../img/bola-de-basquete.png" alt="" style="width: 45px;" class="img_navbar">
+            <div class="navbar">
+                <nav class="nav_header">
+                <a class= "nav_a" href="login.html">Login</a>
+                <a class= "nav_a" href="#">Cadastro</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+</div>
+    </header>
+  <div class="login">
+    <div class="alerta_erro">
+      <div class="card_erro" id="cardErro">
+        <span id="mensagem_erro"></span>
+      </div>
+    </div>
+    
+        
+        <div id="div_erros_login"></div>
+      </div>
+    </div>
+  </div>
+  <!--cadastro Gustavo-->
+   
+        <div class="div_master_cadastro">
+           <div class="img_backgroud">
+            <img src="../img/backgroud_login_3-removebg-preview.png" alt="" class="img_michael">
+        </div>
+       <div class="card_cadastro">
+            <div class="cadastro">
+                <h4>Insira seu nome completo:</h4>
+                <input type="text" id="nome_input">
+                <h4>insira sua data de nascimento:</h4>
+                <input type="date" id="data_nascimento">
+                <h4>Insira seu email:</h4>
+                <input type="text" id="email_input">
+                <h4>Insira uma senha:</h4>
+                <input type="password" id="senha_input">
+                <h4>Confirme sua senha:</h4>
+                <input type="password" id="confirmacao_senha_input">
+                
+               
+                <div class="opcoes_cadastro">
+                     <p><a href="login.html">já tem Cadastro?</a></p>
+                </div>
+                 <div class="button_entrar_class">
+                   <button class="button_entrar" onclick="cadastrar()">ENTRAR</button>
+               </div>
+            </div>
+       </div>
+    </div>
+
+</body>
+
+</html>
+
+<script>
+
+  function cadastrar() {
+    
+    var nomeVar = nome_input.value;
+    var emailVar = email_input.value;
+    var senhaVar = senha_input.value;
+    var confirmacaoSenhaVar = confirmacao_senha_input.value;
+    var dataDeNascimentoVar = data_nascimento.value;
+
+    
+    if (
+      nomeVar == "" ||
+      emailVar == "" ||
+      senhaVar == "" ||
+      confirmacaoSenhaVar == "" ||
+      
+      dataDeNascimentoVar == ""
+    ) {
+      cardErro.style.display = "block";
+      mensagem_erro.innerHTML =
+        "(Mensagem de erro para todos os campos em branco)";
+
+      finalizarAguardar();
+      return false;
+    } else {
+      setInterval(sumirMensagem, 5000);
+    }
+
+   
+    fetch("/usuarios/cadastrar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+       
+        nomeServer: nomeVar,
+        emailServer: emailVar,
+        senhaServer: senhaVar,
+        dataDeNascimentoServer: dataDeNascimentoVar 
+      }),
+    })
+      .then(function (resposta) {
+        console.log("resposta: ", resposta);
+
+        if (resposta.ok) {
+          cardErro.style.display = "block";
+
+          mensagem_erro.innerHTML =
+            "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
+
+          setTimeout(() => {
+            window.location = "login.html";
+          }, "2000");
+
+          limparFormulario();
+          finalizarAguardar();
+        } else {
+          throw "Houve um erro ao tentar realizar o cadastro!";
+        }
+      })
+      .catch(function (resposta) {
+        console.log(`#ERRO: ${resposta}`);
+        finalizarAguardar();
+      });
+
+    return false;
+  }
+
+  function sumirMensagem() {
+    cardErro.style.display = "none";
+  }
+</script>

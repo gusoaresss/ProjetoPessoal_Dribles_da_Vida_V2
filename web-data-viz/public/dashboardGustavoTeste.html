@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Time de Basquete</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      background: #f7f7f7;
+      font-family: Arial;
+      padding: 20px;
+    }
+    h1 { margin-bottom: 20px; }
+    canvas {
+      margin-top: 20px;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body onload="obterTotalJogadores()">
+
+  <h1>Dashboard do Time</h1>
+
+  <h2>Desempenho do time (Vitórias x Derrotas)</h2>
+  <canvas id="graficoDesempenho"></canvas>
+
+  <h2>Comparação: Jogadores / Treinos / Jogos</h2>
+  <canvas id="graficoComparacao"></canvas>
+
+</body>
+</html>
+
+<script>
+var totalJogadores = 0;
+var totalTreinos = 0;
+var totalJogos = 0;
+var totalVitorias = 0;
+var totalDerrotas = 0;
+
+function obterTotalJogadores() {
+  fetch("/jogador/total")
+    .then(function(res) { return res.json(); })
+    .then(function(json) {
+      totalJogadores = json.totalJogadores;
+      obterTotalTreinos();
+    })
+    .catch(function(erro){ console.log("Erro jogadores:", erro); });
+}
+
+function obterTotalTreinos() {
+  fetch("http://localhost:8080/treino/total")
+    .then(function(res) { return res.json(); })
+    .then(function(json) {
+      totalTreinos = json.totalTreinos;
+      obterTotalJogos();
+    })
+    .catch(function(erro){ console.log("Erro treinos:", erro); });
+}
+
+function obterTotalJogos() {
+  fetch("http://localhost:8080/jogo/total")
+    .then(function(res) { return res.json(); })
+    .then(function(json) {
+      totalJogos = json.totalJogos;
+      obterTotalVitorias();
+    })
+    .catch(function(erro){ console.log("Erro total jogos:", erro); });
+}
+
+function obterTotalVitorias() {
+  fetch("http://localhost:8080/jogo/vitorias")
+    .then(function(res) { return res.json(); })
+    .then(function(json) {
+      totalVitorias = json.totalVitorias;
+      obterTotalDerrotas();
+    })
+    .catch(function(erro){ console.log("Erro vitórias:", erro); });
+}
+
+function obterTotalDerrotas() {
+  fetch("http://localhost:8080/jogo/derrotas")
+    .then(function(res) { return res.json(); })
+    .then(function(json) {
+      totalDerrotas = json.totalDerrotas;
+
+   
+      plotarGraficos();
+
+    })
+    .catch(function(erro){ console.log("Erro derrotas:", erro); });
+}
+
+function plotarGraficos() {
+  plotarGraficoDesempenho();
+  plotarGraficoComparacao();
+}
+
+function plotarGraficoDesempenho() {
+  var ctx = document.getElementById("graficoDesempenho").getContext("2d");
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ["Vitórias", "Derrotas"],
+      datasets: [{
+        label: "Desempenho",
+        data: [totalVitorias, totalDerrotas],
+        backgroundColor: ["#4caf50", "#f44336"],
+        borderWidth: 1
+      }]
+    }
+  });
+}
+
+function plotarGraficoComparacao() {
+  var ctx = document.getElementById("graficoComparacao").getContext("2d");
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ["Jogadores", "Treinos", "Jogos"],
+      datasets: [{
+        label: "Quantidade",
+        data: [totalJogadores, totalTreinos, totalJogos],
+        backgroundColor: "rgba(33, 150, 243, 0.2)",
+        borderColor: "#2196f3",
+        tension: 0.2
+      }]
+    }
+  });
+}
+
+</script>

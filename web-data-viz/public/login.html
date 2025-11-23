@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dribles da Vida | Login</title>
+
+    <script src="./js/sessao.js"></script>
+
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+</head>
+
+<body>
+    <div class="login">
+        <div class="alerta_erro">
+            <div class="card_erro" id="cardErro">
+                <span id="mensagem_erro"></span>
+            </div>
+        </div>
+                <div id="div_erros_login"></div>
+            </div>
+        </div>
+    </div>
+    <header>
+        <div class="header">
+            <div class="container">
+          <img src="../img/bola-de-basquete.png" alt="" style="width: 45px;" class="img_navbar">
+            <div class="navbar">
+                <nav class="nav_header">
+                <a class= "nav_a" href="#">Login</a>
+                <a class= "nav_a" href="cadastro.html">Cadastro</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+</div>
+    </header>
+
+    <div class="container_login">
+        <div class="img_backgroud">
+            <img src="../img/backgroud_login_3-removebg-preview.png" alt="">
+        </div>
+        <div class="card_login">
+              <h4>Insira seu email:</h4>
+                <input type="text" id="email_input">
+                <h4>Insira sua senha:</h4>
+                <input type="password" id="senha_input">
+               <p><a href="cadastro.html">Não tem Cadastro?</a></p>
+               <div class="button_entrar_class">
+                   <button class="button_entrar" onclick="entrar()">ENTRAR</button>
+               </div>
+               </div>
+              
+        </div>
+    </div>
+    <footer>
+        <div class="rodapé">
+            <div class="direitos_reservados">
+                <h5>desenvolvido por Gustavo</h5>
+            </div>
+        </div>
+    </footer>
+    
+</body>
+
+</html>
+
+<script>
+
+
+    function entrar() {
+       
+
+        var emailVar = email_input.value;
+        var senhaVar = senha_input.value;
+
+        if (emailVar == "" || senhaVar == "") {
+            cardErro.style.display = "block"
+            mensagem_erro.innerHTML = "(Mensagem de erro para todos os campos em branco)";
+            finalizarAguardar();
+            return false;
+        }
+        else {
+            setInterval(sumirMensagem, 5000)
+        }
+
+        console.log("FORM LOGIN: ", emailVar);
+        console.log("FORM SENHA: ", senhaVar);
+
+        fetch("/usuarios/autenticar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                emailServer: emailVar,
+                senhaServer: senhaVar
+            })
+        }).then(function (resposta) {
+            console.log("ESTOU NO THEN DO entrar()!")
+
+            if (resposta.ok) {
+                console.log(resposta);
+
+                resposta.json().then(json => {
+                    console.log(json);
+                    console.log(JSON.stringify(json));
+                    sessionStorage.EMAIL_USUARIO = json.email;
+                    sessionStorage.NOME_USUARIO = json.nome;
+                    sessionStorage.ID_USUARIO = json.id;
+                
+
+                    setTimeout(function () {
+                        window.location = "../index.html";
+                    }, 1000); 
+
+                });
+
+            } else {
+
+                console.log("Houve um erro ao tentar realizar o login!");
+
+                resposta.text().then(texto => {
+                    console.error(texto);
+                    finalizarAguardar(texto);
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        })
+
+        return false;
+    }
+
+    function sumirMensagem() {
+        cardErro.style.display = "none"
+    }
+
+</script>
