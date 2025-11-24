@@ -19,15 +19,14 @@ CREATE TABLE jogador (
 CREATE TABLE treino (
     id_treino INT AUTO_INCREMENT PRIMARY KEY,
     id_jogador INT NOT NULL,
-    id_usuario INT, -- quem registrou
+    id_usuario INT, 
     data DATE NOT NULL,
     descricao TEXT NOT NULL,
-    FOREIGN KEY (id_jogador) REFERENCES jogador(id_jogador),
-    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario));
+    FOREIGN KEY (id_jogador) REFERENCES jogador(id_jogador));
 
 CREATE TABLE jogo (
     id_jogo INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT, -- quem registrou
+    id_usuario INT, 
     adversario VARCHAR(200) NOT NULL,
     pontos_nosso INT NOT NULL,
     pontos_adversario INT NOT NULL,
