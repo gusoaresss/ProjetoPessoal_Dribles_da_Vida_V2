@@ -34,6 +34,7 @@
     <input type="text" id="posicaoJogador" placeholder="Posição">
     <input type="number" id="idadeJogador" placeholder="Idade">
     <input type="number" id="numeroJogador" placeholder="Número da camisa">
+    <div id="mensagem"></div>
     <button onclick="adicionarJogador()">Adicionar Jogador</button>
 </div>
 
@@ -67,10 +68,9 @@
     <div id="resultado"></div>
  </div>
 
-<button><a href="dashboardGustavoTeste.html">Ver dashboard</a></button>
+<button><a href="dashboard.html">Ver dashboard</a></button>
 
 <script>
-    
 
    function adicionarJogador() {
     var nomeVar = nomeJogador.value;
@@ -82,6 +82,7 @@
         "(Mensagem de erro para todos os campos em branco)";
     }
 
+   
     fetch("/jogador/cadastrar",{
         method: "POST",
         headers: {
@@ -100,6 +101,8 @@
     .catch(function(resposta){
         console.log(`#erro: ${resposta}`);
     });
+
+    mensagem.innerHTML += `jogador: ${nomeVar}, posição: ${posicaoVar}, idade: ${idadeVar}, número da camiseta: ${numeroVar}| <br> `;
 }
 
     function adicionarTreino() {
