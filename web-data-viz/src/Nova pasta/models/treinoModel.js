@@ -1,6 +1,11 @@
 var database = require("../database/config");
 
-
+function listar() {
+    var instrucaoSql = `
+     SELECT COUNT(id_treino) AS totalTreinos FROM treino; 
+    `;
+    return database.executar(instrucaoSql);
+}
 
 function cadastrar(data, descricao) {
     var instrucaoSql = `
@@ -10,15 +15,4 @@ function cadastrar(data, descricao) {
     return database.executar(instrucaoSql);
 }
 
-
-
-function total() {
-    var instrucaosql = `
-        SELECT COUNT(id_treino) AS totalTreinos
-        FROM treino;
-    `;
-    return database.executar(instrucaosql);
-}
-
-
-module.exports = { total, cadastrar };
+module.exports = {listar,cadastrar};

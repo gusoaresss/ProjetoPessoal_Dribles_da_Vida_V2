@@ -3,19 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exemplo de como Plotar Gráficos</title>
+  <title>Grafico - Time basquete</title>
   <!-- Incluindo a biblioteca Chart.js para desenhar gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body onload="obterDados()"> <!-- Chamando a função obterDados ao carregar a página -->
+
+  Grafico indicador:
+  <div id="indicadores">
+     <div class="card" id="cardJogadores">0</div>
+    <div class="card" id="cardTreinos">0</div>
+    <div class="card" id="cardJogos">0</div>
+  </div>
   
 <!-- Título para o gráfico de linhas -->
 Gráfico de linhas
 <div>
   <!-- Elemento canvas onde o gráfico de linha será desenhado -->
   <canvas id="linha"></canvas>
+  Grafico de barras
   <!-- Elemento canvas onde o gráfico de barra será desenhado -->
   <canvas id="barra"></canvas>
+
+
+  <canvas id="pie"></canvas>
+
+
+
 </div>
 
 </body>
@@ -52,8 +66,7 @@ function obterDados(){
 function plotarGraficoLinha(dados){
   
   // Separando os rótulos (labels) e os dados dos votos
-  var votos = [];
-  var jogadores = [];
+
 
   // Preenchendo os arrays com os dados
   for(var i = 0; i < dados.length; i++){

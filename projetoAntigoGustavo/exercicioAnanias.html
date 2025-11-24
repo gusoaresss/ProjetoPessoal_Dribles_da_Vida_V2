@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Código do produto:</h2>
+    <input type="number" id="codigo_input">
+   
+
+    <h2>Nome do produto:</h2>
+    <input type="text" id="nome_input">
+
+    <h2>Quantidade:</h2>
+    <input type="number" id="quantidade_input">
+
+    <button onclick="salvarProduto()">Salvar Produto</button>
+    <button onclick="verEstoque()">Ver Estoque</button>
+
+    <div id="relatorio"></div>
+
+</body>
+</html>
+<script>
+     var codigos = [];
+        var nomes = [];
+        var quantidades = [];
+        var precos = [];
+
+        function salvarProduto() {
+            var codigo = codigo_input.value.trim();
+            var nome = nome_input.value.trim();
+            var quantidade = Number (quantidade_input.value);
+
+            if (codigo.length == 0) {
+                alert("Código inválido para o produto");
+            }
+            if (nome.length == 0) {
+                alert("Nome inválido para o produto");
+            }
+            if (quantidade <= 0) {
+                alert("Quantidade inválida para o produto");
+            }
+
+            var indice = codigos.indexOf(codigo);
+
+            if (indice != -1) {
+                quantidades[indice] += quantidade;
+                relatorio.innerHTML = `O produto de código ${codigo} teve sua quantidade aumentada`
+            } else {
+                var precoAleatorio = Math.floor(Math.random() * 999) + 1;
+
+                codigos.push(codigo);
+                nomes.push(nome);
+                quantidades.push(quantidade);
+                precos.push(precoAleatorio);
+
+                relatorio.innerHTML = `Produto de codigo ${codigo} adicinado ao estoque com sucesso!`;
+            }
+        }
+      
+
+        function verEstoque() {
+           
+
+            if (codigos.length == 0) {
+                 var relatorioEstoque = `Nenhum produto cadastrado.`;
+            } else {
+                for (var i = 0; i < codigos.length; i++) {
+                    relatorioEstoque += `
+                        
+                        Código:${codigos[i]} | <br>
+                        Nome: ${nomes[i]} | <br>
+                        Quantidade:${quantidades[i]} |<br>
+                        Preço: R$ ${precos[i]}<br>
+                    `;
+                }
+            }
+
+          
+            relatorio.innerHTML = relatorioEstoque;
+        }
+    </script>
+</script>

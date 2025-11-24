@@ -1,7 +1,7 @@
 var treinoModel = require("../models/treinoModel");
 
-function total(req, res) {
-    treinoModel.total()
+function listar(req, res) {
+    treinoModel.listar()
         .then(resultado => res.status(200).json(resultado))
         .catch(erro => {
             console.log("Erro ao listar treinos:", erro);
@@ -22,5 +22,7 @@ function cadastrar(req, res) {
         });
 }
 
-
-module.exports = { total,  cadastrar };
+module.exports = {
+    listar,
+    cadastrar
+};

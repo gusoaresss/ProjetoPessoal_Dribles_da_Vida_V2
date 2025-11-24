@@ -1,139 +1,134 @@
+
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/dashboards.css">
   <title>Dashboard - Time de Basquete</title>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <style>
-    body {
-      background: #f7f7f7;
-      font-family: Arial;
-      padding: 20px;
-    }
-    h1 { margin-bottom: 20px; }
-    canvas {
-      margin-top: 20px;
-      background: white;
-      padding: 10px;
-      border-radius: 8px;
-    }
-  </style>
 </head>
 
-<body onload="obterTotalJogadores()">
+<body onload="iniciarDashboard()">
+ 
 
   <h1>Dashboard do Time</h1>
 
-  <h2>Desempenho do time (Vitórias x Derrotas)</h2>
+  <h2>Indicadores</h2>
+<div id="indicadores" class="indicadores">
+  <div id="indicador1" class="indicador">Jogadores: ...</div>
+  <div id="indicador2" class="indicador">Treinos: ...</div>
+  <div id="indicador3" class="indicador">Vitórias: ...</div>
+  <div id="indicador4" class="indicador">Derrotas: ...</div>
+</div>
+  <h2>Desempenho (Vitórias x Derrotas)</h2>
   <canvas id="graficoDesempenho"></canvas>
 
-  <h2>Comparação: Jogadores / Treinos / Jogos</h2>
-  <canvas id="graficoComparacao"></canvas>
+  <h2>Treinos por Mês</h2>
+  <canvas id="graficoTreinosMes"></canvas>
 
-</body>
-</html>
 
 <script>
+
 var totalJogadores = 0;
 var totalTreinos = 0;
-var totalJogos = 0;
 var totalVitorias = 0;
 var totalDerrotas = 0;
 
+
+function iniciarDashboard() {
+  obterTotalJogadores();
+}
+
 function obterTotalJogadores() {
   fetch("/jogador/total")
-    .then(function(res) { return res.json(); })
-    .then(function(json) {
+    .then(r => r.json())
+    .then(json => {
       totalJogadores = json.totalJogadores;
+      indicador1.innerHTML = `Jogadores: ${totalJogadores}`;
       obterTotalTreinos();
-    })
-    .catch(function(erro){ console.log("Erro jogadores:", erro); });
+    });
 }
 
 function obterTotalTreinos() {
-  fetch("http://localhost:8080/treino/total")
-    .then(function(res) { return res.json(); })
-    .then(function(json) {
-      totalTreinos = json.totalTreinos;
-      obterTotalJogos();
-    })
-    .catch(function(erro){ console.log("Erro treinos:", erro); });
-}
+  fetch("/treino/total")
+    .then(r => r.json())
+    .then(json => {
+      
+      totalTreinos = json[0].totalTreinos;
 
-function obterTotalJogos() {
-  fetch("http://localhost:8080/jogo/total")
-    .then(function(res) { return res.json(); })
-    .then(function(json) {
-      totalJogos = json.totalJogos;
+      indicador2.innerHTML = `Treinos: ${totalTreinos}`;
+
       obterTotalVitorias();
-    })
-    .catch(function(erro){ console.log("Erro total jogos:", erro); });
-}
+      obterTotalJogos();
+    }); }
+
+
 
 function obterTotalVitorias() {
-  fetch("http://localhost:8080/jogo/vitorias")
-    .then(function(res) { return res.json(); })
-    .then(function(json) {
+  fetch("/jogo/vitorias")
+    .then(r => r.json())
+    .then(json => {
       totalVitorias = json.totalVitorias;
+      indicador3.innerHTML = `Vitórias: ${totalVitorias}`;
       obterTotalDerrotas();
-    })
-    .catch(function(erro){ console.log("Erro vitórias:", erro); });
+    });
 }
 
 function obterTotalDerrotas() {
-  fetch("http://localhost:8080/jogo/derrotas")
-    .then(function(res) { return res.json(); })
-    .then(function(json) {
+  fetch("/jogo/derrotas")
+    .then(r => r.json())
+    .then(json => {
       totalDerrotas = json.totalDerrotas;
+      indicador4.innerHTML = `Derrotas: ${totalDerrotas}`;
 
-   
-      plotarGraficos();
-
-    })
-    .catch(function(erro){ console.log("Erro derrotas:", erro); });
+      plotarGraficoDesempenho();
+    });
 }
 
-function plotarGraficos() {
-  plotarGraficoDesempenho();
-  plotarGraficoComparacao();
+function obterTotalJogos(){
+  fetch("/jogo/total")
+  .then(r => r.json())
+  .then(json => {
+    totalJogos = json.totalJogos;
+  })
+   plotarGraficoTreinos();
 }
+
 
 function plotarGraficoDesempenho() {
   var ctx = document.getElementById("graficoDesempenho").getContext("2d");
 
   new Chart(ctx, {
-    type: 'bar',
+    type: "pie",
     data: {
       labels: ["Vitórias", "Derrotas"],
       datasets: [{
-        label: "Desempenho",
         data: [totalVitorias, totalDerrotas],
-        backgroundColor: ["#4caf50", "#f44336"],
-        borderWidth: 1
+        backgroundColor: ["#4caf50", "#f44336"]
       }]
     }
   });
 }
 
-function plotarGraficoComparacao() {
-  var ctx = document.getElementById("graficoComparacao").getContext("2d");
+function plotarGraficoTreinos() {
+  var ctx = document.getElementById("graficoTreinosMes").getContext("2d");
 
+ 
   new Chart(ctx, {
-    type: 'line',
+    type: "bar",
     data: {
-      labels: ["Jogadores", "Treinos", "Jogos"],
+      labels: ["Quantidade de treinos"],
       datasets: [{
-        label: "Quantidade",
-        data: [totalJogadores, totalTreinos, totalJogos],
-        backgroundColor: "rgba(33, 150, 243, 0.2)",
-        borderColor: "#2196f3",
-        tension: 0.2
+        label: "Treinos",
+        data: [totalTreinos],
+        backgroundColor: "#2196f3"
       }]
     }
   });
 }
-
 </script>
+</body>
+</html>
