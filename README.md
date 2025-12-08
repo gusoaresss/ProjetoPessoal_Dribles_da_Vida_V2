@@ -10,7 +10,7 @@ https://trello.com/invite/b/6904d1f743d8ceae0b44283e/ATTI6339bbc0dfc2ceac4a9ee88
 ## 🚀 Funcionalidades
 
 - 📚 Seções informativas sobre história, regras e fundamentos do basquete  
-- 🏆 Quiz Perguntas e respostas sobre o conteúdo aplicado  
+- 🏆 Realizar cadastro de times de basquete e acompanhar o progresso do seu time!
 - 🌐 Pagina de Cadastro e login para você se conectar mais ainda ao projeto
 - 📊 Dashboards interativas
 
