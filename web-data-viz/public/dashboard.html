@@ -26,10 +26,6 @@
   <h2>Desempenho (Vitórias x Derrotas)</h2>
   <canvas id="graficoDesempenho"></canvas>
 
-  <h2>Treinos Totais</h2>
-  <canvas id="graficoTreinosMes"></canvas>
-
-
 <script>
 
 var totalJogadores = 0;
@@ -113,22 +109,7 @@ function plotarGraficoDesempenho() {
   });
 }
 
-function plotarGraficoTreinos() {
-  var ctx = document.getElementById("graficoTreinosMes").getContext("2d");
 
- 
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: ["Quantidade de treinos"],
-      datasets: [{
-        label: "Treinos",
-        data: [totalTreinos],
-        backgroundColor: "#2196f3"
-      }]
-    }
-  });
-}
 </script>
 </body>
 </html>
